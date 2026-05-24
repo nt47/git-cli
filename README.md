@@ -14,5 +14,7 @@ One command to synchronize on Git.
 
 ## Usage
 
-#:Oops！ command "gc" is  already in use
+Adding the Environment Variable for local user, use path of g2.exe
+
+#:Oops！ command "g2" is  already in use
 

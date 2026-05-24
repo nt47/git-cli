@@ -15,7 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CLI11.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="encoding.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="git-cli.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="encoding.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
