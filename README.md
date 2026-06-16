@@ -14,7 +14,7 @@ One command to synchronize on Git.
 
 ## Usage
 
-Add the Environment Variable for local user, Select Path then use path of git-cli.exe
+Add the Environment Variable for local user, Select Path then use path to git-cli.exe
 
 ```
 git-cli -u {remote_url} 
