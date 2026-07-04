@@ -22,5 +22,9 @@ git-cli -u {remote_url}
 or
 
 git-cli -u {remote_url} -m "first commit"
+
+or
+
+git-cli -u 123 //directly push
 ```
 

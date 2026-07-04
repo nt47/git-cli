@@ -131,6 +131,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,12 +143,21 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CLI11.hpp" />
+    <ClInclude Include="auto.h" />
+    <ClInclude Include="cmd.h" />
     <ClInclude Include="encoding.h" />
+    <ClInclude Include="hooks.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="macro.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cmd.cpp" />
     <ClCompile Include="encoding.cpp" />
     <ClCompile Include="git-cli.cpp" />
+    <ClCompile Include="hooks.cpp" />
+    <ClCompile Include="macro.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,10 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CLI11.hpp">
+    <ClInclude Include="encoding.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="encoding.h">
+    <ClInclude Include="cmd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="macro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="auto.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ini.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -27,6 +42,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="encoding.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="macro.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
