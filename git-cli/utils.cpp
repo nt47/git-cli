@@ -1,6 +1,6 @@
 #include"utils.h"
 
-std::string utils::js::replace(std::string& s, const std::string& pattern, const std::string& replacement) {
+std::string utils::js::replace(std::string s, const std::string& pattern, const std::string& replacement) {
 	if (pattern.empty()) return s;
 
 	size_t pos = 0;

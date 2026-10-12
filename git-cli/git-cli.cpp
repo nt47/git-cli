@@ -1,39 +1,16 @@
 ﻿#include <iostream>
-#include <cstdio>
 #include <string>
-#include <array>
 #include"CLI11.hpp"
-#include"cmd.h"
 #include"hooks.h"
+#include"cmd.h"
 #include"macro.h"
 #include"auto.h"
 #include"ini.h"
+#include"encoding.h"
 
 
-void auto_pop(const std::wstring& remote_url) {
+void pull_rebase(const std::wstring& remote_url) {
 	using namespace std;
-	// 1. 初始化仓库
-	if (!std::filesystem::exists(".git")) {
-		wcout << run_w(L"git init") << endl;
-	}
-	// 2. 检查远程
-	std::wstring remotes = run_w(L"git remote -v");
-	wcout << L"remotes: " << remotes << endl;
-	if (remotes.empty() && !remote_url.empty()) {
-		//cout << run("git remote add origin " + remote_url) << endl;
-		wcout << run_w(L"git remote add origin " + remote_url) << endl;
-	}
-	// 3. 拉取
-	std::wstring branch = run_w(L"git branch --show-current");
-	if (branch.empty()) branch = L"main";
-	// 去掉换行符
-	branch.erase(branch.find_last_not_of(L" \n\r\t") + 1);
-	wcout << run_w(L"git pull origin " + branch) << endl;
-}
-
-void auto_push(const std::wstring& remote_url, const std::wstring& commit_cmd) {
-	using namespace std;
-
 	// 1. 初始化仓库
 	if (!std::filesystem::exists(".git")) {
 		wcout << run_w(L"git init") << endl;
@@ -45,8 +22,10 @@ void auto_push(const std::wstring& remote_url, const std::wstring& commit_cmd) {
 	// 3. 提交
 	//cout << run("git commit -m \"Auto commit\"") << endl;
 	//cout << run(commit_cmd) << endl;
-	//cout << utils::w2s(run_w(L"git commit -m \"中文测试👽\" ")) << endl;
-	wcout << run_w(commit_cmd) << endl;
+	//cout << utils::w2s(run_w(L"git commit -m \"重建本地仓库👽\" ")) << endl;
+
+	//记住，开启了_setmode，就别乱切换cout/wcout模式，缓冲区会溢出，导致程序崩溃
+	wcout << run_w(L"git commit -m \"pull rebase\"") << endl;
 
 	// 4. 检查远程
 	std::wstring remotes = run_w(L"git remote -v");
@@ -57,54 +36,14 @@ void auto_push(const std::wstring& remote_url, const std::wstring& commit_cmd) {
 		wcout << run_w(L"git remote add origin " + remote_url) << endl;
 	}
 
-	// 5. 推送
+	// 5. 拉取并rebase
 	std::wstring branch = run_w(L"git branch --show-current");
 	if (branch.empty()) branch = L"main";
 
 	// 去掉换行符
 	branch.erase(branch.find_last_not_of(L" \n\r\t") + 1);
 
-	wcout << run_w(L"git push -u origin " + branch) << endl;
-
-
-	wcout << L"推送完成 ✅" << endl;
-
-}
-
-
-void auto_fix(const std::wstring& remote_url, const std::wstring& git_cmd) {
-	using namespace std;
-
-	wstring rs_msg = run_w(L"git ls-remote " + remote_url);
-	wstring url = L"";
-	//std::wcout << L"Error: " << rs_msg << std::endl;
-
-	//wstring rs_msg = run_w(L"git status");
-	//std::wcout << L"Msg:" << rs_msg << std::endl;//返回值例子
-
-	if (wcswcs(rs_msg.c_str(), L"fatal")) {
-		wcout << L"Error: " << rs_msg << std::endl;
-
-		while (wcswcs(rs_msg.c_str(), L"fatal"))
-		{
-			wcout << L"[Auto Fix]Remote URL Not Exists, Please Enter a Valid URL...[!!!]" << endl;
-			wcin >> url;
-			rs_msg = run_w(L"git ls-remote " + url);
-			if (wcswcs(rs_msg.c_str(), L"fatal") == 0)
-			{
-				wcout << L"[Auto Fix]Remote URL Validated Successfully ✅" << endl;
-				wcout << run_w(L"git remote set-url origin " + url) << endl;
-				break;
-			}
-		}
-
-		auto_pop(url);
-
-	}
-	else {
-		return;
-	}
-
+	wcout << run_w(L"git pull origin " + branch + L" --rebase") << endl;
 }
 
 int main(int argc, char** argv) {
@@ -112,6 +51,29 @@ int main(int argc, char** argv) {
 
 	A_START;
 	std::cout << "Normal ASCII output\n";
+
+	std::vector<std::string> args;
+
+	for (int i = 1; i < argc; ++i) {
+		const std::string arg = argv[i];
+
+		if (arg == "-ur") {
+			args.emplace_back("-u");
+
+			if (i + 1 >= argc) {
+				std::cerr << "Error: -u requires a value\n";
+				return 1;
+			}
+
+			args.emplace_back(argv[++i]);
+			args.emplace_back("-r");
+		}
+		else {
+			args.emplace_back(arg);
+		}
+	}
+
+	std::reverse(args.begin(), args.end());
 
 
 
@@ -124,6 +86,9 @@ int main(int argc, char** argv) {
 	std::wstring url;
 	app.add_option("-u,--url", url, "Remote Repository URL")->required();
 
+	bool rebase = false;
+	app.add_flag("-r,--rebase", rebase, "pull with rebase");
+
 
 	//Custom Commands V2.0
 	//Cmd cmd(&app);
@@ -132,7 +97,8 @@ int main(int argc, char** argv) {
 
 
 	// ✔️ 先解析
-	CLI11_PARSE(app, argc, argv);
+	//CLI11_PARSE(app, argc, argv);
+	app.parse(args);
 
 	A_STOP;
 
@@ -145,13 +111,19 @@ int main(int argc, char** argv) {
 	std::wstring git_cmd = L"git commit -m \"" + commit_msg + L"\"";
 
 
-	auto_pop(url);
+	auto_pop(url);//为了获取写入git config的url
 	IniFile ini(L"./.git/config");
 	wstring config_url = ini.Read(L"remote \"origin\"", L"url");
 	//wcout << config_url << ::std::endl;
-	auto_fix(config_url, git_cmd);
+	auto_fix(config_url);
 
-	auto_push(url, git_cmd);
+	if (rebase && url == config_url) {//暂时保留命令 git-cli -ur 123
+		pull_rebase(url);
+	}
+	else
+	{
+		auto_push(git_cmd);
+	}
 
 
 	W_STOP;

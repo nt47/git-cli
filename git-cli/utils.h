@@ -2,6 +2,6 @@
 #include <string>
 
 namespace utils::js {
-	std::string replace(std::string& s, const std::string& pattern, const std::string& replacement);
+	std::string replace(std::string s, const std::string& pattern, const std::string& replacement);
 }
 

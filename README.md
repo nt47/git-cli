@@ -28,3 +28,11 @@ or
 git-cli -u 123 //directly push
 ```
 
+## FAQ
+
+My .git Folder was deleted unexpectedly,how can I resync my remote git again ?
+
+```
+git-cli -ur {remote_url}
+```
+
