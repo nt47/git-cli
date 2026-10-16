@@ -11,10 +11,6 @@ void restore_console_mode();
 inline  std::stack<int> console_mode_stack;
 inline int console_old_mode = 0;
 
-enum class ConsoleMode {
-	TEXT = _O_TEXT,
-	WTEXT = _O_WTEXT,
-};
 
 #define A_START  set_console_mode_text();
 #define A_STOP   do{	\
